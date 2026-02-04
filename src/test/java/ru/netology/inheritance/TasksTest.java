@@ -4,6 +4,62 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TasksTest {
+
+    @Test
+    public void shouldThereAreSeveralTasks() {
+        Todos todos = new Todos();
+        SimpleTask newtask = new SimpleTask(1, "Звонок клиенту");
+        Epic newepic = new Epic(2, new String[]{
+            "Звонок коллеге", "Закрыть задачу"
+        });
+
+        Meeting newmeeting = new Meeting(
+          4,
+          "Звонок руководителю",
+          "BB Банк",
+          "В пятницу"
+        );
+
+        todos.add(newtask);
+        todos.add(newepic);
+        todos.add(newmeeting);
+
+        Task[] expected = {newtask, newepic, newmeeting};
+        Task[] actual = todos.search("Звонок");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindOneTask() {
+        Todos todos = new Todos();
+        SimpleTask task = new SimpleTask(1, "Позвонить");
+        todos.add(task);
+        todos.add(new Epic(2, new String[]{
+                "Молоко"
+        }));
+
+        Task[] expected = {task};
+        Task[] actual = todos.search("Позвонить");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldNotFoundTask() {
+        Todos todos = new Todos();
+        SimpleTask task = new SimpleTask(1, "Позвонить");
+        todos.add(task);
+        todos.add(new Epic(2, new String[]{
+                "Молоко"
+        }));
+
+        Task[] expected = new Task[0];
+        Task[] actual = todos.search("В пятницу");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
     @Test
     public void shouldMatchSimpleTaskWhenQueryInTitle() {
         SimpleTask task = new SimpleTask(1, "Позвонить родителям");
@@ -113,36 +169,6 @@ public class TasksTest {
 
         Task[] expected = {simpleTask, epic, meeting};
         Task[] actual = todos.findAll();
-
-        Assertions.assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldFindOneTask() {
-        Todos todos = new Todos();
-        SimpleTask task = new SimpleTask(1, "Позвонить");
-        todos.add(task);
-        todos.add(new Epic(2, new String[]{
-                "Молоко"
-        }));
-
-        Task[] expected = {task};
-        Task[] actual = todos.search("Позвонить");
-
-        Assertions.assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldNotFoundTask() {
-        Todos todos = new Todos();
-        SimpleTask task = new SimpleTask(1, "Позвонить");
-        todos.add(task);
-        todos.add(new Epic(2, new String[]{
-                "Молоко"
-        }));
-
-        Task[] expected = new Task[0];
-        Task[] actual = todos.search("В пятницу");
 
         Assertions.assertArrayEquals(expected, actual);
     }
